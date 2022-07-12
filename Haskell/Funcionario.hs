@@ -2,20 +2,39 @@ module Funcionario where
 
 type FuncionarioID = Int
 type Nome = String
-type Funcao = Int
+type Funcao = String
 type Salario = Float
 
-data Funcionario = Admin
-  { cod :: FuncionarioID,
+data Funcionario = Funcionario { 
+    cod :: FuncionarioID,
     nome :: Nome,
     funcao :: Funcao,
     remuneracao :: Salario 
   }
   deriving (Read, Show)
 
+instance Entity Funcionario where
+  entityId funcionario = Funcionario.cod funcionario
 
-criarFunc :: Id -> Nome -> Funcao -> Salario -> IO()
-criarFunc cod nome funcao salario = do
-  let funcionario = Funcionario {cod = cod, nome = nome, funcao = funcao, remuneracao = salario}
-  file <- appendFile "db/funcionarios.txt" ("\n" ++ show funcionario)
-  putStrLn "Funcionário cadastrado com sucesso!"
+instance Show Funcionario where
+   show (Funcionario cod nome funcao remuneracao) = "\n-----------------------\n" ++
+                                              "ID: " ++ (show cod) ++ "\n" ++
+                                              "Nome: " ++ nome ++ "\n" ++
+                                              "Função: " ++ funcao ++ "\n" ++
+                                              "Salário: " ++ remuneracao ++ 
+                                              "\n-----------------------\n"
+
+instance Stringfy Funcionario where
+  toString (Funcionario cod nome funcao remuneracao) = show cod ++ "," ++
+                                                  nome ++ "," ++
+                                                  funcao ++ "," ++
+                                                  remuneracao 
+
+instance Read Funcionario where
+  readsPrec _ str = do
+  let l = splitOn "," str
+  let cod = read (l !! 0) :: FuncionarioID
+  let nome = l !! 1
+  let funcao = l !! 2
+  let salario = read (l !! 3) :: Salario
+  [(Funcionario cod nome funcao salario, "")]

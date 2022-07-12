@@ -1,26 +1,37 @@
 module Cliente where
 
+import TypeClasses
+import Data.List.Split
+
 type ClienteID = Int
 type Nome = String
 type Contato = String
 
 data Cliente = Cliente
-  { cod :: Id,
+  { cod :: ClienteID,
     nome :: Nome,
     contato :: Contato
   }
-  deriving (Read, Show)
 
+instance Entity Cliente where
+  entityId cliente = Cliente.cod cliente
 
-criarCliente :: Id -> Nome -> Contato -> IO()
-criarCliente cod nome contato = do
-  let cliente = Cliente {cod = cod, nome = nome, contato = contato}
-  file <- appendFile "clientes.txt" ("\n" ++ show cliente)
-  putStrLn "Cliente cadastrado com sucesso!"
+instance Show Cliente where
+   show (Cliente cod nome contato) = "\n-----------------------\n" ++
+                                              "ID: " ++ (show cod) ++ "\n" ++
+                                              "Nome: " ++ nome ++ "\n" ++
+                                              "Contato: " ++ contato ++ 
+                                              "\n-----------------------\n"
 
+instance Stringfy Cliente where
+  toString (Cliente cod nome contato) = show cod ++ "," ++
+                                                  nome ++ "," ++
+                                                  contato 
 
-main :: IO ()
-main = do
-  nome <- getLine
-  contato <- getLine
-  criarCliente 1 nome contato
+instance Read Cliente where
+  readsPrec _ str = do
+  let l = splitOn "," str
+  let cod = read (l !! 0) :: ClienteID
+  let nome = l !! 1
+  let contato = l !! 2
+  [(Cliente cod nome contato, "")]
