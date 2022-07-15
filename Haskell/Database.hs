@@ -4,16 +4,20 @@ import qualified System.IO.Strict as SIO
 
 import Utils
 import Cliente
+import Funcionario
 import TypeClasses
 
 -- type Interaction = (DB -> Int -> IO ())
 
 data Database = Database {
   clientes :: [Cliente],
-  clienteID :: Int
+  funcionarios :: [Funcionario],
+  clienteID :: Int,
+  funcionarioID :: Int
 } deriving (Show)
 
 listOfStringToListOfClientes l = map read l :: [Cliente]
+listOfStringToListOfFuncionarios l = map read l :: [Funcionario]
 stringToInt str = read str :: Int
 
 addToFile :: Stringfy a => FilePath -> a -> IO ()
@@ -35,11 +39,15 @@ entityToFile a entityFile idFile = do
 connect :: IO Database
 connect = do
   clientesContent <- readFile' "cliente.txt"
+  funcionariosContent <- readFile' "funcionario.txt"
 
-  currentIdClienteContent <- readFile' "cId.txt"
+  currentIdClienteContent <- readFile' "cliId.txt"
+  currentIdFuncionarioContent <- readFile' "funcId.txt"
 
   let clientes = listOfStringToListOfClientes $ splitForFile $ clientesContent
+  let funcionarios = listOfStringToListOfFuncionarios $ splitForFile $ funcionariosContent
 
   let currentIdCliente = stringToInt currentIdClienteContent
+  let currentIdFuncionario = stringToInt currentIdFuncionarioContent
 
-  return (Database clientes currentIdCliente) 
+  return (Database clientes currentIdCliente funcionarios currentIdFuncionario) 

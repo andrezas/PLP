@@ -3,13 +3,14 @@ import Utils
 import Chat
 import System.Exit
 import Cliente
+import Funcionario
 
 main = do
     dados <- Database.connect
-    let codAtual = (Database.clienteID dados) + 1
-    let cliente = Cliente codAtual "Teste" "83 999-888"
-    let clientes = Database.clientes dados
-    Database.entityToFile cliente "cliente.txt" "cId.txt"
-    let newDB = dados {Database.clientes = clientes ++ [cliente], Database.clienteID = codAtual}
+    let codAtual = (Database.funcionarioID dados) + 1
+    let funcionario = Funcionario codAtual "Teste" "admin" 763.0
+    let funcionarios = Database.funcionarios dados
+    Database.entityToFile funcionario "funcionario.txt" "funcId.txt"
+    let newDB = dados {Database.funcionarios = funcionarios ++ [funcionario], Database.funcionarioID = codAtual}
     print (newDB)
-    print( Database.clientes newDB)
+    print( Database.funcionarios newDB)

@@ -1,5 +1,8 @@
 module Funcionario where
 
+import TypeClasses
+import Data.List.Split
+
 type FuncionarioID = Int
 type Nome = String
 type Funcao = String
@@ -11,7 +14,6 @@ data Funcionario = Funcionario {
     funcao :: Funcao,
     remuneracao :: Salario 
   }
-  deriving (Read, Show)
 
 instance Entity Funcionario where
   entityId funcionario = Funcionario.cod funcionario

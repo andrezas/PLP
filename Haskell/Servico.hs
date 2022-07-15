@@ -40,7 +40,7 @@ instance Stringfy Servico where
                                                   mecanicoID ++ "," ++
                                                   status
 
-instance Read Cliente where
+instance Read Servico where
   readsPrec _ str = do
   let l = splitOn "," str
   let cod = read (l !! 0) :: ServicoID
@@ -49,4 +49,4 @@ instance Read Cliente where
   let placa = l !! 3
   let mecanicoID = read (l !! 4) :: FuncionarioID
   let status = l !! 5
-  [(Cliente cod clienteID modelo placa mecanicoID status, "")]
+  [(Servico cod clienteID modelo placa mecanicoID status, "")]
